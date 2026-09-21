@@ -110,10 +110,9 @@ impl Alsa {
     fn err_code_to_string(&self, err_code: c_int) -> String {
         // SAFETY: `snd_strerror` returns a pointer to a static string for any error code.
         unsafe {
-            let message = CStr::from_ptr((self.snd_strerror)(err_code) as *const _)
-                .to_bytes()
-                .to_vec();
-            String::from_utf8(message).unwrap()
+            CStr::from_ptr((self.snd_strerror)(err_code) as *const _)
+                .to_string_lossy()
+                .into_owned()
         }
     }
 
